@@ -4,7 +4,7 @@ import Header from '../components/Header';
 import Loading from '../components/Loading';
 import MusicCard from '../components/MusicCard';
 import getMusics from '../services/musicsAPI';
-import { addSong } from '../services/favoriteSongsAPI';
+import { addSong, getFavoriteSongs } from '../services/favoriteSongsAPI';
 
 class Album extends React.Component {
   constructor() {
@@ -20,6 +20,7 @@ class Album extends React.Component {
 
   componentDidMount() {
     this.getAlbumName();
+    this.getSongList();
   }
 
   onInputChange = (event) => {
@@ -28,14 +29,30 @@ class Album extends React.Component {
     favoriteSongList[0] = albumData;
     this.setState({
       isLoading: true,
-      favoriteSongList: [...favoriteSongList, musicList
-        .find((song) => song.trackId === [name])],
+      favoriteSongList: favoriteSongList
+        .some((song) => song.trackId === parseInt(name, 10)) ? [...favoriteSongList] : (
+          [...favoriteSongList, musicList
+            .find((song) => song.trackId === parseInt(name, 10))]
+        ),
     }, async () => {
-      await addSong(favoriteSongList);
+      await addSong(musicList.find((song) => song.trackId === parseInt(name, 10)));
       this.setState({
         isLoading: false,
-        isChecked: [...isChecked, parseInt(name, 10)],
+        isChecked: isChecked.includes(parseInt(name, 10)) ? [...isChecked] : (
+          [...isChecked, parseInt(name, 10)]
+        ),
       });
+    });
+  };
+
+  getSongList = async () => {
+    this.setState({
+      isLoading: true,
+    });
+    const songList = await getFavoriteSongs();
+    this.setState({
+      isLoading: false,
+      isChecked: songList.filter((item) => item.trackId).map((song) => song.trackId),
     });
   };
 
@@ -44,10 +61,16 @@ class Album extends React.Component {
     const { params } = match;
     const { id } = params;
     const results = await getMusics(id);
+    // , this.setState({
+    //   isChecked: favoritesSong.filter((item) => results
+    //     .indexOf(item) !== 0)
+    //     .map((song) => song.trackId),
+    // })
     this.setState({
       isLoading: false,
       albumData: results[0],
       musicList: results.filter((item) => results.indexOf(item) !== 0),
+
     });
   };
 
