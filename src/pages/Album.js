@@ -36,6 +36,7 @@ class Album extends React.Component {
         ),
     }, async () => {
       await addSong(musicList.find((song) => song.trackId === parseInt(name, 10)));
+      await this.getSongList();
       this.setState({
         isLoading: false,
         isChecked: isChecked.includes(parseInt(name, 10)) ? [...isChecked] : (
