@@ -4,7 +4,7 @@ import Header from '../components/Header';
 import Loading from '../components/Loading';
 import MusicCard from '../components/MusicCard';
 import getMusics from '../services/musicsAPI';
-import { addSong, getFavoriteSongs } from '../services/favoriteSongsAPI';
+import { addSong, getFavoriteSongs, removeSong } from '../services/favoriteSongsAPI';
 
 class Album extends React.Component {
   constructor() {
@@ -13,7 +13,6 @@ class Album extends React.Component {
       isLoading: true,
       albumData: {},
       musicList: [],
-      favoriteSongList: [],
       isChecked: [],
     };
   }
@@ -24,24 +23,21 @@ class Album extends React.Component {
   }
 
   onInputChange = (event) => {
-    const { name } = event.target;
-    const { favoriteSongList, albumData, musicList, isChecked } = this.state;
-    favoriteSongList[0] = albumData;
+    const { name, checked } = event.target;
+    const { musicList } = this.state;
     this.setState({
       isLoading: true,
-      favoriteSongList: favoriteSongList
-        .some((song) => song.trackId === parseInt(name, 10)) ? [...favoriteSongList] : (
-          [...favoriteSongList, musicList
-            .find((song) => song.trackId === parseInt(name, 10))]
-        ),
     }, async () => {
-      await addSong(musicList.find((song) => song.trackId === parseInt(name, 10)));
+      if (checked) {
+        await addSong(musicList
+          .find((song) => song.trackId === parseInt(name, 10)));
+      } else {
+        await removeSong(musicList
+          .find((song) => song.trackId === parseInt(name, 10)));
+      }
       await this.getSongList();
       this.setState({
         isLoading: false,
-        isChecked: isChecked.includes(parseInt(name, 10)) ? [...isChecked] : (
-          [...isChecked, parseInt(name, 10)]
-        ),
       });
     });
   };
