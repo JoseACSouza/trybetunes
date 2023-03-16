@@ -4,6 +4,7 @@ import Header from '../components/Header';
 import Loading from '../components/Loading';
 import MusicCard from '../components/MusicCard';
 import getMusics from '../services/musicsAPI';
+import { addSong } from '../services/favoriteSongsAPI';
 
 class Album extends React.Component {
   constructor() {
@@ -12,12 +13,31 @@ class Album extends React.Component {
       isLoading: true,
       albumData: {},
       musicList: [],
+      favoriteSongList: [],
+      isChecked: [],
     };
   }
 
   componentDidMount() {
     this.getAlbumName();
   }
+
+  onInputChange = (event) => {
+    const { name } = event.target;
+    const { favoriteSongList, albumData, musicList, isChecked } = this.state;
+    favoriteSongList[0] = albumData;
+    this.setState({
+      isLoading: true,
+      favoriteSongList: [...favoriteSongList, musicList
+        .find((song) => song.trackId === [name])],
+    }, async () => {
+      await addSong(favoriteSongList);
+      this.setState({
+        isLoading: false,
+        isChecked: [...isChecked, parseInt(name, 10)],
+      });
+    });
+  };
 
   getAlbumName = async () => {
     const { match } = this.props;
@@ -41,14 +61,20 @@ class Album extends React.Component {
           <>
             <h2 data-testid="album-name">{collectionName}</h2>
             <h3 data-testid="artist-name">{artistName}</h3>
-            { musicList.map((music) => (
-              <div key={ music.trackId }>
-                <MusicCard
-                  trackName={ music.trackName }
-                  previewUrl={ music.previewUrl }
-                />
-              </div>
-            )) }
+            { musicList.map((music) => {
+              const { isChecked } = this.state;
+              return (
+                <div key={ music.trackId }>
+                  <MusicCard
+                    trackId={ music.trackId }
+                    trackName={ music.trackName }
+                    previewUrl={ music.previewUrl }
+                    onInputChange={ this.onInputChange }
+                    isChecked={ isChecked }
+                  />
+                </div>
+              );
+            }) }
           </>
         )}
       </div>
