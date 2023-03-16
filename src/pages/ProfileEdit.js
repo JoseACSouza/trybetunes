@@ -58,7 +58,8 @@ class ProfileEdit extends React.Component {
     await updateUser(updatedUser);
     this.setState({
       isLoading: false,
-    }, history.push('/profile'));
+      userInfo: updatedUser,
+    }, history.push('/profile', this.state));
   };
 
   handleButton = () => {
