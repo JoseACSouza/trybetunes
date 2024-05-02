@@ -54,24 +54,27 @@ class Favorites extends React.Component {
     const { isLoading, musicList } = this.state;
     return (
       <div data-testid="page-favorites">
-        <Header />
+        <Header route="favorites" />
         {isLoading ? <Loading /> : (
-          <>
-            { musicList.map((music) => {
-              const { isChecked } = this.state;
-              return (
-                <div key={ music.trackId }>
-                  <MusicCard
-                    trackId={ music.trackId }
-                    trackName={ music.trackName }
-                    previewUrl={ music.previewUrl }
-                    onInputChange={ this.onInputChange }
-                    isChecked={ isChecked }
-                  />
-                </div>
-              );
-            }) }
-          </>
+          <div className="flex justify-center my-6">
+            <div className="w-2/4 flex-colum items-center">
+              <p className="text-2xl mb-2"> Favorites songs: </p>
+              { musicList.map((music) => {
+                const { isChecked } = this.state;
+                return (
+                  <div key={ music.trackId }>
+                    <MusicCard
+                      trackId={ music.trackId }
+                      trackName={ music.trackName }
+                      previewUrl={ music.previewUrl }
+                      onInputChange={ this.onInputChange }
+                      isChecked={ isChecked }
+                    />
+                  </div>
+                );
+              }) }
+            </div>
+          </div>
         )}
       </div>
     );

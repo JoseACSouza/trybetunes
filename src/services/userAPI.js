@@ -1,3 +1,5 @@
+import userImage from '../images/user.png';
+
 const USER_KEY = 'user';
 const TIMEOUT = 1500;
 const SUCCESS_STATUS = 'OK';
@@ -30,7 +32,7 @@ export const createUser = (user) => new Promise((resolve) => {
   const emptyUser = {
     name: '',
     email: '',
-    image: '',
+    image: userImage,
     description: '',
   };
   saveUser({ ...emptyUser, ...user });

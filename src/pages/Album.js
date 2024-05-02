@@ -58,11 +58,7 @@ class Album extends React.Component {
     const { params } = match;
     const { id } = params;
     const results = await getMusics(id);
-    // , this.setState({
-    //   isChecked: favoritesSong.filter((item) => results
-    //     .indexOf(item) !== 0)
-    //     .map((song) => song.trackId),
-    // })
+
     this.setState({
       isLoading: false,
       albumData: results[0],
@@ -73,29 +69,48 @@ class Album extends React.Component {
 
   render() {
     const { isLoading, albumData, musicList } = this.state;
-    const { artistName, collectionName } = albumData;
+    const { artistName, collectionName, artworkUrl100 } = albumData;
     return (
       <div data-testid="page-album">
         <Header />
         {isLoading ? <Loading /> : (
-          <>
-            <h2 data-testid="album-name">{collectionName}</h2>
-            <h3 data-testid="artist-name">{artistName}</h3>
-            { musicList.map((music) => {
-              const { isChecked } = this.state;
-              return (
-                <div key={ music.trackId }>
-                  <MusicCard
-                    trackId={ music.trackId }
-                    trackName={ music.trackName }
-                    previewUrl={ music.previewUrl }
-                    onInputChange={ this.onInputChange }
-                    isChecked={ isChecked }
-                  />
-                </div>
-              );
-            }) }
-          </>
+          <div className="flex justify-evenly m-4">
+            <div className="my-20">
+              <img
+                src={ artworkUrl100 }
+                alt={ collectionName }
+                className="w-64"
+              />
+              <h2
+                data-testid="album-name"
+                className="mt-1 text-center"
+              >
+                {collectionName}
+              </h2>
+              <h3
+                data-testid="artist-name"
+                className="text-center text-sm"
+              >
+                {artistName}
+              </h3>
+            </div>
+            <div>
+              { musicList.map((music) => {
+                const { isChecked } = this.state;
+                return (
+                  <div key={ music.trackId }>
+                    <MusicCard
+                      trackId={ music.trackId }
+                      trackName={ music.trackName }
+                      previewUrl={ music.previewUrl }
+                      onInputChange={ this.onInputChange }
+                      isChecked={ isChecked }
+                    />
+                  </div>
+                );
+              }) }
+            </div>
+          </div>
         )}
       </div>
     );
@@ -105,7 +120,7 @@ class Album extends React.Component {
 Album.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({
-      id: PropTypes.string.isRequired,
+      id: PropTypes.number.isRequired,
     }).isRequired,
   }).isRequired,
 };

@@ -29,18 +29,35 @@ class Profile extends React.Component {
     const { userInfo, isLoading } = this.state;
     return (
       <div data-testid="page-profile">
-        <Header />
+        <Header route="profile" />
         {isLoading ? <Loading /> : (
-          <>
-            <p>{userInfo.name}</p>
-            <p>{userInfo.email}</p>
-            <p>{userInfo.description}</p>
-            <img src={ userInfo.image } alt="avatar" data-testid="profile-image" />
-
-            <Link to="/profile/edit">
-              Editar perfil
-            </Link>
-          </>
+          <div className="flex justify-center my-6">
+            <div className="w-1/4 flex-col self-center">
+              <div className="flex items-center justify-between mb-4">
+                <img
+                  src={ userInfo.image }
+                  alt="avatar"
+                  className="rounded-full w-24 h-24"
+                  data-testid="profile-image"
+                />
+                <Link to="/profile/edit">
+                  <button
+                    type="button"
+                    className="py-1.5 px-2 me-2 mb-2 text-sm font-medium border-blue-600
+                  border-2 rounded-full text-gray-600"
+                  >
+                    Edit Profile
+                  </button>
+                </Link>
+              </div>
+              <p className="text-lg font-bold text-gray-800">Name</p>
+              <p className="mb-4">{userInfo.name}</p>
+              <p className="text-lg font-bold text-gray-800">Email</p>
+              <p className="mb-4">{userInfo.email}</p>
+              <p className="text-lg font-bold text-gray-800">Description</p>
+              <p className="mb-4 text-sm">{userInfo.description}</p>
+            </div>
+          </div>
         )}
       </div>
     );
