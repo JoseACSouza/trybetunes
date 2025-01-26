@@ -2,6 +2,7 @@
   "name": "trybetunes",
   "version": "1.0.1",
   "private": true,
+  "homepage": "https://joseacsouza.github.io/trybetunes",
   "engines": {
     "node": "16 || 18"
   },
@@ -21,7 +22,9 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint:styles": "npx stylelint '**/*.css'",
-    "lint": "eslint --no-inline-config --no-error-on-unmatched-pattern -c .eslintrc.json . --ext .js,.jsx"
+    "lint": "eslint --no-inline-config --no-error-on-unmatched-pattern -c .eslintrc.json . --ext .js,.jsx",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -43,6 +46,7 @@
   },
   "devDependencies": {
     "@trybe/eslint-config-frontend": "^1.7.1",
+    "gh-pages": "^6.3.0",
     "prop-types": "^15.8.1",
     "stylelint": "^14.11.0",
     "stylelint-config-standard": "^28.0.0",
